@@ -103,9 +103,9 @@ data class HeavyData(
 // ========================================================================
 
 @Composable
-fun RememberVsSaveableScreen() {
+fun RememberVsSaveableScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),

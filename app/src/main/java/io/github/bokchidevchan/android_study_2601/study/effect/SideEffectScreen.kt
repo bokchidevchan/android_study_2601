@@ -58,9 +58,9 @@ import kotlinx.coroutines.launch
  */
 
 @Composable
-fun SideEffectScreen() {
+fun SideEffectScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),

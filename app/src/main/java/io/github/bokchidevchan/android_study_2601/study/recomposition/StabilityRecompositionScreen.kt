@@ -51,9 +51,9 @@ import kotlinx.collections.immutable.ImmutableList
  */
 
 @Composable
-fun StabilityRecompositionScreen() {
+fun StabilityRecompositionScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
