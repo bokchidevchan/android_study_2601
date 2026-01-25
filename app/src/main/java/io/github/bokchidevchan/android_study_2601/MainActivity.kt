@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,8 +19,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.bokchidevchan.android_study_2601.study.effect.SideEffectScreen
+import io.github.bokchidevchan.android_study_2601.study.immutable.StrongSkippingModeScreen
 import io.github.bokchidevchan.android_study_2601.study.recomposition.StabilityRecompositionScreen
 import io.github.bokchidevchan.android_study_2601.study.state.RememberVsSaveableScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
@@ -46,13 +48,15 @@ fun StudyNavigator(modifier: Modifier = Modifier) {
     val tabs = listOf(
         "State 저장" to "remember vs\nrememberSaveable",
         "Stability" to "Recomposition\n최적화",
-        "Side Effects" to "LaunchedEffect\nDisposableEffect"
+        "Side Effects" to "LaunchedEffect\nDisposableEffect",
+        "Skipping" to "ImmutableList\nvs List"
     )
 
     Column(modifier = modifier.fillMaxSize()) {
-        TabRow(
+        ScrollableTabRow(
             selectedTabIndex = selectedTab,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            edgePadding = 8.dp
         ) {
             tabs.forEachIndexed { index, (title, subtitle) ->
                 Tab(
@@ -79,6 +83,7 @@ fun StudyNavigator(modifier: Modifier = Modifier) {
             0 -> RememberVsSaveableScreen()
             1 -> StabilityRecompositionScreen()
             2 -> SideEffectScreen()
+            3 -> StrongSkippingModeScreen()
         }
     }
 }
