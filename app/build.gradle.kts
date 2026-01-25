@@ -40,7 +40,15 @@ android {
     }
 }
 
+// Strong Skipping Mode 비활성화 (학습용)
+// 이 모드가 켜져 있으면 람다도 자동 최적화되어 차이를 볼 수 없음
+composeCompiler {
+    enableStrongSkippingMode = false
+}
+
 dependencies {
+    // Immutable Collections (Stability 최적화용)
+    implementation(libs.kotlinx.collections.immutable)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
