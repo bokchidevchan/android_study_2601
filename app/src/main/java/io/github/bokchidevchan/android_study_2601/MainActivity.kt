@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import io.github.bokchidevchan.android_study_2601.study.effect.SideEffectScreen
 import io.github.bokchidevchan.android_study_2601.study.recomposition.StabilityRecompositionScreen
 import io.github.bokchidevchan.android_study_2601.study.state.RememberVsSaveableScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
@@ -44,7 +45,8 @@ fun StudyNavigator(modifier: Modifier = Modifier) {
 
     val tabs = listOf(
         "State 저장" to "remember vs\nrememberSaveable",
-        "Stability" to "Recomposition\n최적화"
+        "Stability" to "Recomposition\n최적화",
+        "Side Effects" to "LaunchedEffect\nDisposableEffect"
     )
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -76,6 +78,7 @@ fun StudyNavigator(modifier: Modifier = Modifier) {
         when (selectedTab) {
             0 -> RememberVsSaveableScreen()
             1 -> StabilityRecompositionScreen()
+            2 -> SideEffectScreen()
         }
     }
 }
