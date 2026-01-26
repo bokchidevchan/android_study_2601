@@ -38,12 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.bokchidevchan.android_study_2601.study.derived.DerivedStateOfScreen
-import io.github.bokchidevchan.android_study_2601.study.effect.SideEffectScreen
-import io.github.bokchidevchan.android_study_2601.study.immutable.StrongSkippingModeScreen
-import io.github.bokchidevchan.android_study_2601.study.recomposition.StabilityRecompositionScreen
+import io.github.bokchidevchan.android_study_2601.study.compose.derived.DerivedStateOfScreen
+import io.github.bokchidevchan.android_study_2601.study.compose.effect.SideEffectScreen
+import io.github.bokchidevchan.android_study_2601.study.compose.immutable.StrongSkippingModeScreen
+import io.github.bokchidevchan.android_study_2601.study.compose.recomposition.StabilityRecompositionScreen
+import io.github.bokchidevchan.android_study_2601.study.compose.state.RememberVsSaveableScreen
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
-import io.github.bokchidevchan.android_study_2601.study.state.RememberVsSaveableScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 class MainActivity : ComponentActivity() {

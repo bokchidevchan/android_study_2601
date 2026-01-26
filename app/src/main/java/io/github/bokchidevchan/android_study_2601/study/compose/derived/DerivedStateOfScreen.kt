@@ -1,4 +1,4 @@
-package io.github.bokchidevchan.android_study_2601.study.derived
+package io.github.bokchidevchan.android_study_2601.study.compose.derived
 
 import android.util.Log
 import androidx.compose.foundation.background
