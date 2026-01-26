@@ -1,4 +1,4 @@
-package io.github.bokchidevchan.android_study_2601.study.immutable
+package io.github.bokchidevchan.android_study_2601.study.compose.immutable
 
 import android.util.Log
 import androidx.compose.foundation.background

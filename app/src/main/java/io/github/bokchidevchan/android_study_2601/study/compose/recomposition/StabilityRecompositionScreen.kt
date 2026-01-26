@@ -1,4 +1,4 @@
-package io.github.bokchidevchan.android_study_2601.study.recomposition
+package io.github.bokchidevchan.android_study_2601.study.compose.recomposition
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

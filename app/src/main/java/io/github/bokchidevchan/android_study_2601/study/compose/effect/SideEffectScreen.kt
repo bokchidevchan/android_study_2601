@@ -1,4 +1,4 @@
-package io.github.bokchidevchan.android_study_2601.study.effect
+package io.github.bokchidevchan.android_study_2601.study.compose.effect
 
 import android.util.Log
 import androidx.compose.foundation.background

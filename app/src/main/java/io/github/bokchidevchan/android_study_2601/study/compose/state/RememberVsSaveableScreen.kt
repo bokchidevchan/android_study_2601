@@ -1,4 +1,4 @@
-package io.github.bokchidevchan.android_study_2601.study.state
+package io.github.bokchidevchan.android_study_2601.study.compose.state
 
 import android.os.Parcelable
 import android.util.Log
