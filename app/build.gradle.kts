@@ -19,7 +19,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Hilt 통합 테스트를 위한 커스텀 러너
+        testInstrumentationRunner = "io.github.bokchidevchan.android_study_2601.study.hilt.HiltTestRunner"
     }
 
     buildTypes {
@@ -40,6 +41,14 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+        }
     }
 }
 

@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.github.bokchidevchan.android_study_2601.study.hilt.presentation.PurchaseUiState
 import io.github.bokchidevchan.android_study_2601.study.hilt.presentation.PurchaseViewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 /**
  * ========================================================================
@@ -347,8 +349,10 @@ private fun LiveDemoSection(
                     if (uiState.isLoading) {
                         CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     } else {
+                        val formattedBalance = NumberFormat.getNumberInstance(Locale.KOREA)
+                            .format(uiState.balance)
                         Text(
-                            text = "${uiState.balance}원",
+                            text = "${formattedBalance}원",
                             fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF2E7D32)
@@ -373,20 +377,33 @@ private fun LiveDemoSection(
                 }
 
                 Button(
+                    onClick = { onPurchase("potion", 1000) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B1FA2))
+                ) {
+                    Text("1,000원 아이템 구매")
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
                     onClick = { onPurchase("sword", 3000) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
                 ) {
-                    Text("검 구매 (3000원)")
+                    Text("검 구매 (3,000원)")
                 }
-            }
 
-            Button(
-                onClick = { onPurchase("shield", 15000) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
-            ) {
-                Text("방패 구매 (15000원) - 잔액 부족 테스트")
+                Button(
+                    onClick = { onPurchase("shield", 15000) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
+                ) {
+                    Text("방패 (15,000원)")
+                }
             }
 
             // 결과 메시지
