@@ -43,9 +43,12 @@ import io.github.bokchidevchan.android_study_2601.study.compose.effect.SideEffec
 import io.github.bokchidevchan.android_study_2601.study.compose.immutable.StrongSkippingModeScreen
 import io.github.bokchidevchan.android_study_2601.study.compose.recomposition.StabilityRecompositionScreen
 import io.github.bokchidevchan.android_study_2601.study.compose.state.RememberVsSaveableScreen
+import dagger.hilt.android.AndroidEntryPoint
+import io.github.bokchidevchan.android_study_2601.study.hilt.HiltStudyScreen
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +68,7 @@ class MainActivity : ComponentActivity() {
 sealed class Category(val title: String, val subtitle: String, val emoji: String, val color: Color) {
     data object Compose : Category("Compose 학습", "State, Recomposition, Side Effects", "🎨", Color(0xFFE3F2FD))
     data object Networking : Category("Networking", "HttpURLConnection, Retrofit, OkHttp", "🌐", Color(0xFFFFF3E0))
+    data object Hilt : Category("Hilt DI", "의존성 주입, 테스트, Mock", "💉", Color(0xFFE8EAF6))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -77,6 +81,10 @@ sealed class ComposeScreen(val title: String, val subtitle: String, val color: C
 
 sealed class NetworkingScreen(val title: String, val subtitle: String, val color: Color) {
     data object HttpVsRetrofit : NetworkingScreen("HttpURLConnection vs Retrofit", "저수준 vs 고수준 API 비교", Color(0xFFE8F5E9))
+}
+
+sealed class HiltScreen(val title: String, val subtitle: String, val color: Color) {
+    data object HiltBasics : HiltScreen("Hilt 기초", "@HiltAndroidApp, @Inject, @Module", Color(0xFFE8EAF6))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,6 +100,8 @@ fun StudyNavigator() {
             "StateSaving", "Stability", "SideEffects", "StrongSkipping", "DerivedState" -> "Compose"
             // Networking 세부 화면에서 뒤로가기 -> Networking 카테고리로
             "HttpVsRetrofit" -> "Networking"
+            // Hilt 세부 화면에서 뒤로가기 -> Hilt 카테고리로
+            "HiltBasics" -> "Hilt"
             // 카테고리에서 뒤로가기 -> Root로
             else -> "Root"
         }
@@ -101,18 +111,21 @@ fun StudyNavigator() {
         "Root" -> ""
         "Compose" -> "Compose 학습"
         "Networking" -> "Networking"
+        "Hilt" -> "Hilt DI"
         "StateSaving" -> ComposeScreen.StateSaving.title
         "Stability" -> ComposeScreen.Stability.title
         "SideEffects" -> ComposeScreen.SideEffects.title
         "StrongSkipping" -> ComposeScreen.StrongSkipping.title
         "DerivedState" -> ComposeScreen.DerivedState.title
         "HttpVsRetrofit" -> NetworkingScreen.HttpVsRetrofit.title
+        "HiltBasics" -> HiltScreen.HiltBasics.title
         else -> ""
     }
 
     val backDestination = when (currentScreen) {
         "StateSaving", "Stability", "SideEffects", "StrongSkipping", "DerivedState" -> "Compose"
         "HttpVsRetrofit" -> "Networking"
+        "HiltBasics" -> "Hilt"
         else -> "Root"
     }
 
@@ -154,6 +167,10 @@ fun StudyNavigator() {
                 modifier = Modifier.padding(innerPadding),
                 onNavigate = { currentScreen = it }
             )
+            "Hilt" -> HiltHomeScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
             // Compose 세부 화면
             "StateSaving" -> RememberVsSaveableScreen(Modifier.padding(innerPadding))
             "Stability" -> StabilityRecompositionScreen(Modifier.padding(innerPadding))
@@ -162,6 +179,8 @@ fun StudyNavigator() {
             "DerivedState" -> DerivedStateOfScreen(Modifier.padding(innerPadding))
             // Networking 세부 화면
             "HttpVsRetrofit" -> HttpVsRetrofitScreen(Modifier.padding(innerPadding))
+            // Hilt 세부 화면
+            "HiltBasics" -> HiltStudyScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -214,6 +233,16 @@ fun RootScreen(
             description = "HttpURLConnection vs Retrofit, OkHttp, JSON 직렬화 등",
             color = Category.Networking.color,
             onClick = { onCategorySelect("Networking") }
+        )
+
+        // Hilt DI
+        CategoryCard(
+            emoji = Category.Hilt.emoji,
+            title = Category.Hilt.title,
+            subtitle = Category.Hilt.subtitle,
+            description = "Dagger Hilt 의존성 주입, Mock/Fake 테스트, Clean Architecture",
+            color = Category.Hilt.color,
+            onClick = { onCategorySelect("Hilt") }
         )
     }
 }
@@ -366,6 +395,46 @@ fun NetworkingHomeScreen(
         // - OkHttp 내부 동작
         // - JSON 직렬화 (Gson vs Kotlinx.Serialization)
         // - Interceptor 활용
+    }
+}
+
+// ========================================================================
+// Hilt Home Screen - Hilt DI 학습 주제 선택
+// ========================================================================
+
+@Composable
+fun HiltHomeScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "학습하고 싶은 주제를 선택하세요",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 1. Hilt 기초
+        StudyCard(
+            title = HiltScreen.HiltBasics.title,
+            subtitle = HiltScreen.HiltBasics.subtitle,
+            description = "Hilt를 사용하는 이유, 기본 어노테이션, Mock/Fake 테스트 가이드",
+            color = HiltScreen.HiltBasics.color,
+            onClick = { onNavigate("HiltBasics") }
+        )
+
+        // TODO: 추가 예정
+        // - Hilt with Compose (hiltViewModel)
+        // - Custom Scope & Qualifier
+        // - Multi-module Hilt
     }
 }
 
