@@ -55,9 +55,9 @@ import kotlinx.collections.immutable.toImmutableList
  */
 
 @Composable
-fun StrongSkippingModeScreen() {
+fun StrongSkippingModeScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
