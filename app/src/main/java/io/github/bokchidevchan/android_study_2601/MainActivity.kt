@@ -42,6 +42,7 @@ import io.github.bokchidevchan.android_study_2601.study.derived.DerivedStateOfSc
 import io.github.bokchidevchan.android_study_2601.study.effect.SideEffectScreen
 import io.github.bokchidevchan.android_study_2601.study.immutable.StrongSkippingModeScreen
 import io.github.bokchidevchan.android_study_2601.study.recomposition.StabilityRecompositionScreen
+import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
 import io.github.bokchidevchan.android_study_2601.study.state.RememberVsSaveableScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
@@ -160,7 +161,7 @@ fun StudyNavigator() {
             "StrongSkipping" -> StrongSkippingModeScreen(Modifier.padding(innerPadding))
             "DerivedState" -> DerivedStateOfScreen(Modifier.padding(innerPadding))
             // Networking 세부 화면
-            "HttpVsRetrofit" -> NetworkingPlaceholderScreen(Modifier.padding(innerPadding))
+            "HttpVsRetrofit" -> HttpVsRetrofitScreen(Modifier.padding(innerPadding))
         }
     }
 }
