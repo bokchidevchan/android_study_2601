@@ -20,6 +20,9 @@ import org.junit.Test
  * 테스트 패턴:
  * - finder → action → assertion
  * - "무엇을 찾고 → 무엇을 하고 → 무엇을 확인"
+ *
+ * 주의: Android Instrumented Test에서는 백틱(`) 메서드명에 공백/한글 사용 불가
+ * DEX 버전 제한으로 인해 언더스코어(_) 형식 사용
  */
 class ComposeUITest {
 
@@ -35,8 +38,11 @@ class ComposeUITest {
     // 1. Finder - 노드 찾기
     // ========================================================================
 
+    /**
+     * onNodeWithText - 텍스트로 노드 찾기
+     */
     @Test
-    fun `onNodeWithText - 텍스트로 노드 찾기`() {
+    fun finder_onNodeWithText_findsNodeByText() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -55,8 +61,11 @@ class ComposeUITest {
         composeTestRule.onNodeWithText("초기 상태").assertIsDisplayed()
     }
 
+    /**
+     * onNodeWithTag - testTag로 노드 찾기
+     */
     @Test
-    fun `onNodeWithTag - testTag로 노드 찾기`() {
+    fun finder_onNodeWithTag_findsNodeByTestTag() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -76,8 +85,11 @@ class ComposeUITest {
         composeTestRule.onNodeWithTag("reset_button").assertIsDisplayed()
     }
 
+    /**
+     * onNodeWithContentDescription - 접근성 설명으로 찾기
+     */
     @Test
-    fun `onNodeWithContentDescription - 접근성 설명으로 찾기`() {
+    fun finder_onNodeWithContentDescription_findsNodeByAccessibility() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -96,8 +108,11 @@ class ComposeUITest {
             .assertIsDisplayed()
     }
 
+    /**
+     * onAllNodes - 여러 노드 찾기
+     */
     @Test
-    fun `onAllNodesWithText - 여러 노드 찾기`() {
+    fun finder_onAllNodes_findsMultipleNodes() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -119,8 +134,11 @@ class ComposeUITest {
     // 2. Assertion - 상태 검증
     // ========================================================================
 
+    /**
+     * assertIsDisplayed - 노드가 표시되는지
+     */
     @Test
-    fun `assertIsDisplayed - 노드가 표시되는지`() {
+    fun assertion_assertIsDisplayed_verifiesNodeIsVisible() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -137,8 +155,11 @@ class ComposeUITest {
         composeTestRule.onNodeWithText("테스트 메시지").assertIsDisplayed()
     }
 
+    /**
+     * assertDoesNotExist - 노드가 존재하지 않는지
+     */
     @Test
-    fun `assertDoesNotExist - 노드가 존재하지 않는지`() {
+    fun assertion_assertDoesNotExist_verifiesNodeNotPresent() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -155,8 +176,11 @@ class ComposeUITest {
         composeTestRule.onNodeWithTag("message_text").assertDoesNotExist()
     }
 
+    /**
+     * assertIsEnabled / assertIsNotEnabled - 활성화 상태
+     */
     @Test
-    fun `assertIsEnabled와 assertIsNotEnabled - 활성화 상태`() {
+    fun assertion_assertIsNotEnabled_verifiesButtonDisabled() {
         composeTestRule.setContent {
             MaterialTheme {
                 InputFormContent(
@@ -177,8 +201,11 @@ class ComposeUITest {
             .assertIsNotEnabled()
     }
 
+    /**
+     * assertTextEquals - 정확한 텍스트 확인
+     */
     @Test
-    fun `assertTextEquals - 정확한 텍스트 확인`() {
+    fun assertion_assertTextEquals_verifiesExactText() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -200,8 +227,11 @@ class ComposeUITest {
     // 3. Action - 사용자 동작
     // ========================================================================
 
+    /**
+     * performClick - 클릭 동작
+     */
     @Test
-    fun `performClick - 클릭 동작`() {
+    fun action_performClick_triggersCallback() {
         var count = 0
 
         composeTestRule.setContent {
@@ -225,8 +255,11 @@ class ComposeUITest {
         assert(count == 1)
     }
 
+    /**
+     * performTextInput - 텍스트 입력
+     */
     @Test
-    fun `performTextInput - 텍스트 입력`() {
+    fun action_performTextInput_entersText() {
         var name = ""
         var email = ""
 
@@ -261,8 +294,11 @@ class ComposeUITest {
         assert(email == "hong@test.com")
     }
 
+    /**
+     * performTextClearance - 텍스트 지우기
+     */
     @Test
-    fun `performTextClearance - 텍스트 지우기`() {
+    fun action_performTextClearance_clearsText() {
         var text = "초기값"
 
         composeTestRule.setContent {
@@ -292,8 +328,11 @@ class ComposeUITest {
     // 4. 통합 시나리오 테스트
     // ========================================================================
 
+    /**
+     * 카운터 증가/감소/리셋 시나리오
+     */
     @Test
-    fun `카운터_증가_감소_리셋_시나리오`() {
+    fun scenario_counterIncrementDecrementReset() {
         var count = 0
 
         composeTestRule.setContent {
@@ -329,8 +368,11 @@ class ComposeUITest {
         assert(count == 0)
     }
 
+    /**
+     * 입력폼 유효성검사 시나리오
+     */
     @Test
-    fun `입력폼_유효성검사_시나리오`() {
+    fun scenario_inputFormValidation() {
         var name = ""
         var email = ""
         var errorMessage: String? = null
@@ -385,8 +427,11 @@ class ComposeUITest {
     // 5. 고급 기능
     // ========================================================================
 
+    /**
+     * printToLog - 디버깅용 Semantics Tree 출력
+     */
     @Test
-    fun `printToLog - 디버깅용 Semantics Tree 출력`() {
+    fun advanced_printToLog_outputsSemanticsTree() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -408,8 +453,11 @@ class ComposeUITest {
             .printToLog("COUNTER_CARD")
     }
 
+    /**
+     * onChildren - 계층 구조 확인
+     */
     @Test
-    fun `hasAnyChild와 hasParent - 계층 구조 확인`() {
+    fun advanced_onChildren_checksHierarchy() {
         composeTestRule.setContent {
             MaterialTheme {
                 CounterContent(
@@ -464,4 +512,7 @@ class ComposeUITest {
  * - Stateless Composable로 분리하여 테스트
  * - 의미론적 Matcher 우선 (onNodeWithText > onNodeWithTag)
  * - 접근성(Accessibility) 고려 = 좋은 테스트
+ *
+ * 주의: Android Instrumented Test는 DEX 제한으로
+ * 백틱 메서드명에 공백/한글 사용 불가 → 언더스코어 사용
  */
