@@ -46,6 +46,7 @@ import io.github.bokchidevchan.android_study_2601.study.compose.state.RememberVs
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.bokchidevchan.android_study_2601.study.hilt.HiltStudyScreen
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
+import io.github.bokchidevchan.android_study_2601.study.testing.TestingStudyScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 @AndroidEntryPoint
@@ -69,6 +70,7 @@ sealed class Category(val title: String, val subtitle: String, val emoji: String
     data object Compose : Category("Compose 학습", "State, Recomposition, Side Effects", "🎨", Color(0xFFE3F2FD))
     data object Networking : Category("Networking", "HttpURLConnection, Retrofit, OkHttp", "🌐", Color(0xFFFFF3E0))
     data object Hilt : Category("Hilt DI", "의존성 주입, 테스트, Mock", "💉", Color(0xFFE8EAF6))
+    data object Testing : Category("Testing", "Unit, MockK, Coroutine, Compose UI, TDD", "🧪", Color(0xFFE8F5E9))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -87,6 +89,10 @@ sealed class HiltScreen(val title: String, val subtitle: String, val color: Colo
     data object HiltBasics : HiltScreen("Hilt 기초", "@HiltAndroidApp, @Inject, @Module", Color(0xFFE8EAF6))
 }
 
+sealed class TestingScreen(val title: String, val subtitle: String, val color: Color) {
+    data object TestingOverview : TestingScreen("Testing 개요", "테스트 피라미드, 철학, 가이드", Color(0xFFE8F5E9))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyNavigator() {
@@ -102,6 +108,8 @@ fun StudyNavigator() {
             "HttpVsRetrofit" -> "Networking"
             // Hilt 세부 화면에서 뒤로가기 -> Hilt 카테고리로
             "HiltBasics" -> "Hilt"
+            // Testing 세부 화면에서 뒤로가기 -> Testing 카테고리로
+            "TestingOverview" -> "Testing"
             // 카테고리에서 뒤로가기 -> Root로
             else -> "Root"
         }
@@ -112,6 +120,7 @@ fun StudyNavigator() {
         "Compose" -> "Compose 학습"
         "Networking" -> "Networking"
         "Hilt" -> "Hilt DI"
+        "Testing" -> "Testing"
         "StateSaving" -> ComposeScreen.StateSaving.title
         "Stability" -> ComposeScreen.Stability.title
         "SideEffects" -> ComposeScreen.SideEffects.title
@@ -119,6 +128,7 @@ fun StudyNavigator() {
         "DerivedState" -> ComposeScreen.DerivedState.title
         "HttpVsRetrofit" -> NetworkingScreen.HttpVsRetrofit.title
         "HiltBasics" -> HiltScreen.HiltBasics.title
+        "TestingOverview" -> TestingScreen.TestingOverview.title
         else -> ""
     }
 
@@ -126,6 +136,7 @@ fun StudyNavigator() {
         "StateSaving", "Stability", "SideEffects", "StrongSkipping", "DerivedState" -> "Compose"
         "HttpVsRetrofit" -> "Networking"
         "HiltBasics" -> "Hilt"
+        "TestingOverview" -> "Testing"
         else -> "Root"
     }
 
@@ -171,6 +182,10 @@ fun StudyNavigator() {
                 modifier = Modifier.padding(innerPadding),
                 onNavigate = { currentScreen = it }
             )
+            "Testing" -> TestingHomeScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
             // Compose 세부 화면
             "StateSaving" -> RememberVsSaveableScreen(Modifier.padding(innerPadding))
             "Stability" -> StabilityRecompositionScreen(Modifier.padding(innerPadding))
@@ -181,6 +196,8 @@ fun StudyNavigator() {
             "HttpVsRetrofit" -> HttpVsRetrofitScreen(Modifier.padding(innerPadding))
             // Hilt 세부 화면
             "HiltBasics" -> HiltStudyScreen(Modifier.padding(innerPadding))
+            // Testing 세부 화면
+            "TestingOverview" -> TestingStudyScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -243,6 +260,16 @@ fun RootScreen(
             description = "Dagger Hilt 의존성 주입, Mock/Fake 테스트, Clean Architecture",
             color = Category.Hilt.color,
             onClick = { onCategorySelect("Hilt") }
+        )
+
+        // Testing
+        CategoryCard(
+            emoji = Category.Testing.emoji,
+            title = Category.Testing.title,
+            subtitle = Category.Testing.subtitle,
+            description = "JUnit, MockK, Coroutine Test, Compose UI Test, TDD 실습",
+            color = Category.Testing.color,
+            onClick = { onCategorySelect("Testing") }
         )
     }
 }
@@ -435,6 +462,46 @@ fun HiltHomeScreen(
         // - Hilt with Compose (hiltViewModel)
         // - Custom Scope & Qualifier
         // - Multi-module Hilt
+    }
+}
+
+// ========================================================================
+// Testing Home Screen - Testing 학습 주제 선택
+// ========================================================================
+
+@Composable
+fun TestingHomeScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "학습하고 싶은 주제를 선택하세요",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 1. Testing 개요
+        StudyCard(
+            title = TestingScreen.TestingOverview.title,
+            subtitle = TestingScreen.TestingOverview.subtitle,
+            description = "테스트 피라미드, 언제 테스트해야 하는지, Unit/MockK/Coroutine/Compose/TDD",
+            color = TestingScreen.TestingOverview.color,
+            onClick = { onNavigate("TestingOverview") }
+        )
+
+        // TODO: 추가 예정
+        // - Screenshot Testing
+        // - Performance Testing
+        // - Integration Testing
     }
 }
 
