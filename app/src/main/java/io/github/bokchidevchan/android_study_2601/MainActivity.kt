@@ -45,6 +45,7 @@ import io.github.bokchidevchan.android_study_2601.study.compose.recomposition.St
 import io.github.bokchidevchan.android_study_2601.study.compose.state.RememberVsSaveableScreen
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.bokchidevchan.android_study_2601.study.hilt.HiltStudyScreen
+import io.github.bokchidevchan.android_study_2601.study.hilt.comparison.HiltComparisonScreen
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
 import io.github.bokchidevchan.android_study_2601.study.testing.TestingStudyScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
@@ -87,6 +88,7 @@ sealed class NetworkingScreen(val title: String, val subtitle: String, val color
 
 sealed class HiltScreen(val title: String, val subtitle: String, val color: Color) {
     data object HiltBasics : HiltScreen("Hilt 기초", "@HiltAndroidApp, @Inject, @Module", Color(0xFFE8EAF6))
+    data object HiltComparison : HiltScreen("Hilt 사용 전/후 비교", "수동 DI vs Hilt 코드 비교", Color(0xFFFFF3E0))
 }
 
 sealed class TestingScreen(val title: String, val subtitle: String, val color: Color) {
@@ -107,7 +109,7 @@ fun StudyNavigator() {
             // Networking 세부 화면에서 뒤로가기 -> Networking 카테고리로
             "HttpVsRetrofit" -> "Networking"
             // Hilt 세부 화면에서 뒤로가기 -> Hilt 카테고리로
-            "HiltBasics" -> "Hilt"
+            "HiltBasics", "HiltComparison" -> "Hilt"
             // Testing 세부 화면에서 뒤로가기 -> Testing 카테고리로
             "TestingOverview" -> "Testing"
             // 카테고리에서 뒤로가기 -> Root로
@@ -128,6 +130,7 @@ fun StudyNavigator() {
         "DerivedState" -> ComposeScreen.DerivedState.title
         "HttpVsRetrofit" -> NetworkingScreen.HttpVsRetrofit.title
         "HiltBasics" -> HiltScreen.HiltBasics.title
+        "HiltComparison" -> HiltScreen.HiltComparison.title
         "TestingOverview" -> TestingScreen.TestingOverview.title
         else -> ""
     }
@@ -135,7 +138,7 @@ fun StudyNavigator() {
     val backDestination = when (currentScreen) {
         "StateSaving", "Stability", "SideEffects", "StrongSkipping", "DerivedState" -> "Compose"
         "HttpVsRetrofit" -> "Networking"
-        "HiltBasics" -> "Hilt"
+        "HiltBasics", "HiltComparison" -> "Hilt"
         "TestingOverview" -> "Testing"
         else -> "Root"
     }
@@ -196,6 +199,7 @@ fun StudyNavigator() {
             "HttpVsRetrofit" -> HttpVsRetrofitScreen(Modifier.padding(innerPadding))
             // Hilt 세부 화면
             "HiltBasics" -> HiltStudyScreen(Modifier.padding(innerPadding))
+            "HiltComparison" -> HiltComparisonScreen(Modifier.padding(innerPadding))
             // Testing 세부 화면
             "TestingOverview" -> TestingStudyScreen(Modifier.padding(innerPadding))
         }
@@ -456,6 +460,15 @@ fun HiltHomeScreen(
             description = "Hilt를 사용하는 이유, 기본 어노테이션, Mock/Fake 테스트 가이드",
             color = HiltScreen.HiltBasics.color,
             onClick = { onNavigate("HiltBasics") }
+        )
+
+        // 2. Hilt 사용 전/후 비교
+        StudyCard(
+            title = HiltScreen.HiltComparison.title,
+            subtitle = HiltScreen.HiltComparison.subtitle,
+            description = "같은 기능을 수동 DI와 Hilt로 구현한 코드 비교, 왜 Hilt를 쓰는지 이해",
+            color = HiltScreen.HiltComparison.color,
+            onClick = { onNavigate("HiltComparison") }
         )
 
         // TODO: 추가 예정
