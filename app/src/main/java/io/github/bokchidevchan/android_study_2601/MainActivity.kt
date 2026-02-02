@@ -49,6 +49,10 @@ import io.github.bokchidevchan.android_study_2601.study.hilt.comparison.HiltComp
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
 import io.github.bokchidevchan.android_study_2601.study.testing.TestingStudyScreen
 import io.github.bokchidevchan.android_study_2601.study.memory.MemoryLeakScreen
+import io.github.bokchidevchan.android_study_2601.study.kotlin.KotlinStudyScreen
+import io.github.bokchidevchan.android_study_2601.study.kotlin.functional.FunctionalProgrammingScreen
+import io.github.bokchidevchan.android_study_2601.study.kotlin.oop.ObjectOrientedScreen
+import io.github.bokchidevchan.android_study_2601.study.kotlin.generics.GenericsScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 @AndroidEntryPoint
@@ -74,6 +78,7 @@ sealed class Category(val title: String, val subtitle: String, val emoji: String
     data object Hilt : Category("Hilt DI", "의존성 주입, 테스트, Mock", "💉", Color(0xFFE8EAF6))
     data object Testing : Category("Testing", "Unit, MockK, Coroutine, Compose UI, TDD", "🧪", Color(0xFFE8F5E9))
     data object Memory : Category("Memory", "메모리 누수 패턴, 디버깅 도구", "🧠", Color(0xFFFCE4EC))
+    data object Kotlin : Category("Kotlin 심화", "함수형, 객체지향, 제네릭", "🎯", Color(0xFFF3E5F5))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -101,6 +106,12 @@ sealed class MemoryScreen(val title: String, val subtitle: String, val color: Co
     data object MemoryLeak : MemoryScreen("메모리 누수 패턴", "7가지 누수 패턴과 해결책", Color(0xFFFCE4EC))
 }
 
+sealed class KotlinScreen(val title: String, val subtitle: String, val color: Color) {
+    data object Functional : KotlinScreen("함수형 프로그래밍", "순수 함수, 고차 함수, Scope Functions", Color(0xFFE3F2FD))
+    data object ObjectOriented : KotlinScreen("객체지향 프로그래밍", "캡슐화, 다형성, SOLID", Color(0xFFFFF3E0))
+    data object Generics : KotlinScreen("제네릭", "Variance, Constraints, reified", Color(0xFFE8F5E9))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyNavigator() {
@@ -110,17 +121,12 @@ fun StudyNavigator() {
     // 뒤로가기 처리
     BackHandler(enabled = currentScreen != "Root") {
         currentScreen = when (currentScreen) {
-            // Compose 세부 화면에서 뒤로가기 -> Compose 카테고리로
             "StateSaving", "Stability", "SideEffects", "StrongSkipping", "DerivedState" -> "Compose"
-            // Networking 세부 화면에서 뒤로가기 -> Networking 카테고리로
             "HttpVsRetrofit" -> "Networking"
-            // Hilt 세부 화면에서 뒤로가기 -> Hilt 카테고리로
             "HiltBasics", "HiltComparison" -> "Hilt"
-            // Testing 세부 화면에서 뒤로가기 -> Testing 카테고리로
             "TestingOverview" -> "Testing"
-            // Memory 세부 화면에서 뒤로가기 -> Memory 카테고리로
             "MemoryLeak" -> "Memory"
-            // 카테고리에서 뒤로가기 -> Root로
+            "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
             else -> "Root"
         }
     }
@@ -132,6 +138,7 @@ fun StudyNavigator() {
         "Hilt" -> "Hilt DI"
         "Testing" -> "Testing"
         "Memory" -> "Memory"
+        "Kotlin" -> "Kotlin 심화"
         "StateSaving" -> ComposeScreen.StateSaving.title
         "Stability" -> ComposeScreen.Stability.title
         "SideEffects" -> ComposeScreen.SideEffects.title
@@ -142,6 +149,9 @@ fun StudyNavigator() {
         "HiltComparison" -> HiltScreen.HiltComparison.title
         "TestingOverview" -> TestingScreen.TestingOverview.title
         "MemoryLeak" -> MemoryScreen.MemoryLeak.title
+        "FunctionalProgramming" -> KotlinScreen.Functional.title
+        "ObjectOriented" -> KotlinScreen.ObjectOriented.title
+        "Generics" -> KotlinScreen.Generics.title
         else -> ""
     }
 
@@ -151,6 +161,7 @@ fun StudyNavigator() {
         "HiltBasics", "HiltComparison" -> "Hilt"
         "TestingOverview" -> "Testing"
         "MemoryLeak" -> "Memory"
+        "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
         else -> "Root"
     }
 
@@ -204,7 +215,10 @@ fun StudyNavigator() {
                 modifier = Modifier.padding(innerPadding),
                 onNavigate = { currentScreen = it }
             )
-            // Compose 세부 화면
+            "Kotlin" -> KotlinStudyScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
             "StateSaving" -> RememberVsSaveableScreen(Modifier.padding(innerPadding))
             "Stability" -> StabilityRecompositionScreen(Modifier.padding(innerPadding))
             "SideEffects" -> SideEffectScreen(Modifier.padding(innerPadding))
@@ -219,6 +233,10 @@ fun StudyNavigator() {
             "TestingOverview" -> TestingStudyScreen(Modifier.padding(innerPadding))
             // Memory 세부 화면
             "MemoryLeak" -> MemoryLeakScreen(Modifier.padding(innerPadding))
+            // Kotlin 세부 화면
+            "FunctionalProgramming" -> FunctionalProgrammingScreen(Modifier.padding(innerPadding))
+            "ObjectOriented" -> ObjectOrientedScreen(Modifier.padding(innerPadding))
+            "Generics" -> GenericsScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -301,6 +319,16 @@ fun RootScreen(
             description = "메모리 누수 7가지 패턴, LeakCanary, Memory Profiler 사용법",
             color = Category.Memory.color,
             onClick = { onCategorySelect("Memory") }
+        )
+
+        // Kotlin 심화
+        CategoryCard(
+            emoji = Category.Kotlin.emoji,
+            title = Category.Kotlin.title,
+            subtitle = Category.Kotlin.subtitle,
+            description = "순수 함수, 고차 함수, 캡슐화, 다형성, Variance, reified 등",
+            color = Category.Kotlin.color,
+            onClick = { onCategorySelect("Kotlin") }
         )
     }
 }
