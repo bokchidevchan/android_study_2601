@@ -53,6 +53,10 @@ import io.github.bokchidevchan.android_study_2601.study.kotlin.KotlinStudyScreen
 import io.github.bokchidevchan.android_study_2601.study.kotlin.functional.FunctionalProgrammingScreen
 import io.github.bokchidevchan.android_study_2601.study.kotlin.oop.ObjectOrientedScreen
 import io.github.bokchidevchan.android_study_2601.study.kotlin.generics.GenericsScreen
+import io.github.bokchidevchan.android_study_2601.study.navigation.NavigationStudyScreen
+import io.github.bokchidevchan.android_study_2601.study.navigation.Navigation2Screen
+import io.github.bokchidevchan.android_study_2601.study.navigation.Navigation3Screen
+import io.github.bokchidevchan.android_study_2601.study.navigation.NavigationComparisonScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 @AndroidEntryPoint
@@ -79,6 +83,7 @@ sealed class Category(val title: String, val subtitle: String, val emoji: String
     data object Testing : Category("Testing", "Unit, MockK, Coroutine, Compose UI, TDD", "🧪", Color(0xFFE8F5E9))
     data object Memory : Category("Memory", "메모리 누수 패턴, 디버깅 도구", "🧠", Color(0xFFFCE4EC))
     data object Kotlin : Category("Kotlin 심화", "함수형, 객체지향, 제네릭", "🎯", Color(0xFFF3E5F5))
+    data object Navigation : Category("Navigation", "Navigation 2 vs 3, Deep Link", "🧭", Color(0xFFE0F7FA))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -112,6 +117,12 @@ sealed class KotlinScreen(val title: String, val subtitle: String, val color: Co
     data object Generics : KotlinScreen("제네릭", "Variance, Constraints, reified", Color(0xFFE8F5E9))
 }
 
+sealed class NavigationScreen(val title: String, val subtitle: String, val color: Color) {
+    data object Navigation2 : NavigationScreen("Navigation 2", "NavHost, NavController", Color(0xFFE3F2FD))
+    data object Navigation3 : NavigationScreen("Navigation 3", "NavDisplay, NavBackStack", Color(0xFFE8F5E9))
+    data object Comparison : NavigationScreen("Nav 2 vs 3 비교", "핵심 차이점, 마이그레이션", Color(0xFFFFF3E0))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyNavigator() {
@@ -127,6 +138,7 @@ fun StudyNavigator() {
             "TestingOverview" -> "Testing"
             "MemoryLeak" -> "Memory"
             "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
+            "Navigation2", "Navigation3", "NavigationComparison" -> "Navigation"
             else -> "Root"
         }
     }
@@ -139,6 +151,7 @@ fun StudyNavigator() {
         "Testing" -> "Testing"
         "Memory" -> "Memory"
         "Kotlin" -> "Kotlin 심화"
+        "Navigation" -> "Navigation"
         "StateSaving" -> ComposeScreen.StateSaving.title
         "Stability" -> ComposeScreen.Stability.title
         "SideEffects" -> ComposeScreen.SideEffects.title
@@ -152,6 +165,9 @@ fun StudyNavigator() {
         "FunctionalProgramming" -> KotlinScreen.Functional.title
         "ObjectOriented" -> KotlinScreen.ObjectOriented.title
         "Generics" -> KotlinScreen.Generics.title
+        "Navigation2" -> NavigationScreen.Navigation2.title
+        "Navigation3" -> NavigationScreen.Navigation3.title
+        "NavigationComparison" -> NavigationScreen.Comparison.title
         else -> ""
     }
 
@@ -162,6 +178,7 @@ fun StudyNavigator() {
         "TestingOverview" -> "Testing"
         "MemoryLeak" -> "Memory"
         "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
+        "Navigation2", "Navigation3", "NavigationComparison" -> "Navigation"
         else -> "Root"
     }
 
@@ -237,6 +254,15 @@ fun StudyNavigator() {
             "FunctionalProgramming" -> FunctionalProgrammingScreen(Modifier.padding(innerPadding))
             "ObjectOriented" -> ObjectOrientedScreen(Modifier.padding(innerPadding))
             "Generics" -> GenericsScreen(Modifier.padding(innerPadding))
+            // Navigation
+            "Navigation" -> NavigationStudyScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
+            // Navigation 세부 화면
+            "Navigation2" -> Navigation2Screen(Modifier.padding(innerPadding))
+            "Navigation3" -> Navigation3Screen(Modifier.padding(innerPadding))
+            "NavigationComparison" -> NavigationComparisonScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -329,6 +355,16 @@ fun RootScreen(
             description = "순수 함수, 고차 함수, 캡슐화, 다형성, Variance, reified 등",
             color = Category.Kotlin.color,
             onClick = { onCategorySelect("Kotlin") }
+        )
+
+        // Navigation
+        CategoryCard(
+            emoji = Category.Navigation.emoji,
+            title = Category.Navigation.title,
+            subtitle = Category.Navigation.subtitle,
+            description = "Navigation 2와 Navigation 3의 차이, Deep Link, Type-safe 라우팅",
+            color = Category.Navigation.color,
+            onClick = { onCategorySelect("Navigation") }
         )
     }
 }
