@@ -57,6 +57,11 @@ import io.github.bokchidevchan.android_study_2601.study.navigation.NavigationStu
 import io.github.bokchidevchan.android_study_2601.study.navigation.Navigation2Screen
 import io.github.bokchidevchan.android_study_2601.study.navigation.Navigation3Screen
 import io.github.bokchidevchan.android_study_2601.study.navigation.NavigationComparisonScreen
+import io.github.bokchidevchan.android_study_2601.study.coroutine.CoroutineStudyScreen
+import io.github.bokchidevchan.android_study_2601.study.coroutine.CoroutineBasicsScreen
+import io.github.bokchidevchan.android_study_2601.study.coroutine.CoroutineDispatchersScreen
+import io.github.bokchidevchan.android_study_2601.study.coroutine.CoroutineFlowScreen
+import io.github.bokchidevchan.android_study_2601.study.coroutine.CoroutineExceptionScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 @AndroidEntryPoint
@@ -84,6 +89,7 @@ sealed class Category(val title: String, val subtitle: String, val emoji: String
     data object Memory : Category("Memory", "메모리 누수 패턴, 디버깅 도구", "🧠", Color(0xFFFCE4EC))
     data object Kotlin : Category("Kotlin 심화", "함수형, 객체지향, 제네릭", "🎯", Color(0xFFF3E5F5))
     data object Navigation : Category("Navigation", "Navigation 2 vs 3, Deep Link", "🧭", Color(0xFFE0F7FA))
+    data object Coroutine : Category("Coroutine", "suspend, Flow, Dispatchers, 예외 처리", "⚡", Color(0xFFFFF8E1))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -123,6 +129,13 @@ sealed class NavigationScreen(val title: String, val subtitle: String, val color
     data object Comparison : NavigationScreen("Nav 2 vs 3 비교", "핵심 차이점, 마이그레이션", Color(0xFFFFF3E0))
 }
 
+sealed class CoroutineScreen(val title: String, val subtitle: String, val color: Color) {
+    data object Basics : CoroutineScreen("코루틴 기초", "suspend, Scope, Job, launch vs async", Color(0xFFE3F2FD))
+    data object Dispatchers : CoroutineScreen("Dispatchers", "Main, IO, Default, withContext", Color(0xFFFFF3E0))
+    data object Flow : CoroutineScreen("Flow", "StateFlow, SharedFlow, Cold vs Hot", Color(0xFFE8F5E9))
+    data object Exception : CoroutineScreen("예외 처리", "Handler, supervisorScope, try-catch", Color(0xFFFCE4EC))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyNavigator() {
@@ -139,6 +152,7 @@ fun StudyNavigator() {
             "MemoryLeak" -> "Memory"
             "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
             "Navigation2", "Navigation3", "NavigationComparison" -> "Navigation"
+            "CoroutineBasics", "CoroutineDispatchers", "CoroutineFlow", "CoroutineException" -> "Coroutine"
             else -> "Root"
         }
     }
@@ -168,6 +182,11 @@ fun StudyNavigator() {
         "Navigation2" -> NavigationScreen.Navigation2.title
         "Navigation3" -> NavigationScreen.Navigation3.title
         "NavigationComparison" -> NavigationScreen.Comparison.title
+        "Coroutine" -> "Coroutine"
+        "CoroutineBasics" -> CoroutineScreen.Basics.title
+        "CoroutineDispatchers" -> CoroutineScreen.Dispatchers.title
+        "CoroutineFlow" -> CoroutineScreen.Flow.title
+        "CoroutineException" -> CoroutineScreen.Exception.title
         else -> ""
     }
 
@@ -179,6 +198,7 @@ fun StudyNavigator() {
         "MemoryLeak" -> "Memory"
         "FunctionalProgramming", "ObjectOriented", "Generics" -> "Kotlin"
         "Navigation2", "Navigation3", "NavigationComparison" -> "Navigation"
+        "CoroutineBasics", "CoroutineDispatchers", "CoroutineFlow", "CoroutineException" -> "Coroutine"
         else -> "Root"
     }
 
@@ -263,6 +283,16 @@ fun StudyNavigator() {
             "Navigation2" -> Navigation2Screen(Modifier.padding(innerPadding))
             "Navigation3" -> Navigation3Screen(Modifier.padding(innerPadding))
             "NavigationComparison" -> NavigationComparisonScreen(Modifier.padding(innerPadding))
+            // Coroutine
+            "Coroutine" -> CoroutineStudyScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
+            // Coroutine 세부 화면
+            "CoroutineBasics" -> CoroutineBasicsScreen(Modifier.padding(innerPadding))
+            "CoroutineDispatchers" -> CoroutineDispatchersScreen(Modifier.padding(innerPadding))
+            "CoroutineFlow" -> CoroutineFlowScreen(Modifier.padding(innerPadding))
+            "CoroutineException" -> CoroutineExceptionScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -365,6 +395,16 @@ fun RootScreen(
             description = "Navigation 2와 Navigation 3의 차이, Deep Link, Type-safe 라우팅",
             color = Category.Navigation.color,
             onClick = { onCategorySelect("Navigation") }
+        )
+
+        // Coroutine
+        CategoryCard(
+            emoji = Category.Coroutine.emoji,
+            title = Category.Coroutine.title,
+            subtitle = Category.Coroutine.subtitle,
+            description = "suspend, CoroutineScope, Flow, StateFlow, 예외 처리 패턴",
+            color = Category.Coroutine.color,
+            onClick = { onCategorySelect("Coroutine") }
         )
     }
 }
