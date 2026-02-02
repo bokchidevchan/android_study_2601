@@ -48,6 +48,7 @@ import io.github.bokchidevchan.android_study_2601.study.hilt.HiltStudyScreen
 import io.github.bokchidevchan.android_study_2601.study.hilt.comparison.HiltComparisonScreen
 import io.github.bokchidevchan.android_study_2601.study.networking.HttpVsRetrofitScreen
 import io.github.bokchidevchan.android_study_2601.study.testing.TestingStudyScreen
+import io.github.bokchidevchan.android_study_2601.study.memory.MemoryLeakScreen
 import io.github.bokchidevchan.android_study_2601.ui.theme.Android_study_2601Theme
 
 @AndroidEntryPoint
@@ -72,6 +73,7 @@ sealed class Category(val title: String, val subtitle: String, val emoji: String
     data object Networking : Category("Networking", "HttpURLConnection, Retrofit, OkHttp", "🌐", Color(0xFFFFF3E0))
     data object Hilt : Category("Hilt DI", "의존성 주입, 테스트, Mock", "💉", Color(0xFFE8EAF6))
     data object Testing : Category("Testing", "Unit, MockK, Coroutine, Compose UI, TDD", "🧪", Color(0xFFE8F5E9))
+    data object Memory : Category("Memory", "메모리 누수 패턴, 디버깅 도구", "🧠", Color(0xFFFCE4EC))
 }
 
 sealed class ComposeScreen(val title: String, val subtitle: String, val color: Color) {
@@ -95,6 +97,10 @@ sealed class TestingScreen(val title: String, val subtitle: String, val color: C
     data object TestingOverview : TestingScreen("Testing 개요", "테스트 피라미드, 철학, 가이드", Color(0xFFE8F5E9))
 }
 
+sealed class MemoryScreen(val title: String, val subtitle: String, val color: Color) {
+    data object MemoryLeak : MemoryScreen("메모리 누수 패턴", "7가지 누수 패턴과 해결책", Color(0xFFFCE4EC))
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudyNavigator() {
@@ -112,6 +118,8 @@ fun StudyNavigator() {
             "HiltBasics", "HiltComparison" -> "Hilt"
             // Testing 세부 화면에서 뒤로가기 -> Testing 카테고리로
             "TestingOverview" -> "Testing"
+            // Memory 세부 화면에서 뒤로가기 -> Memory 카테고리로
+            "MemoryLeak" -> "Memory"
             // 카테고리에서 뒤로가기 -> Root로
             else -> "Root"
         }
@@ -123,6 +131,7 @@ fun StudyNavigator() {
         "Networking" -> "Networking"
         "Hilt" -> "Hilt DI"
         "Testing" -> "Testing"
+        "Memory" -> "Memory"
         "StateSaving" -> ComposeScreen.StateSaving.title
         "Stability" -> ComposeScreen.Stability.title
         "SideEffects" -> ComposeScreen.SideEffects.title
@@ -132,6 +141,7 @@ fun StudyNavigator() {
         "HiltBasics" -> HiltScreen.HiltBasics.title
         "HiltComparison" -> HiltScreen.HiltComparison.title
         "TestingOverview" -> TestingScreen.TestingOverview.title
+        "MemoryLeak" -> MemoryScreen.MemoryLeak.title
         else -> ""
     }
 
@@ -140,6 +150,7 @@ fun StudyNavigator() {
         "HttpVsRetrofit" -> "Networking"
         "HiltBasics", "HiltComparison" -> "Hilt"
         "TestingOverview" -> "Testing"
+        "MemoryLeak" -> "Memory"
         else -> "Root"
     }
 
@@ -189,6 +200,10 @@ fun StudyNavigator() {
                 modifier = Modifier.padding(innerPadding),
                 onNavigate = { currentScreen = it }
             )
+            "Memory" -> MemoryHomeScreen(
+                modifier = Modifier.padding(innerPadding),
+                onNavigate = { currentScreen = it }
+            )
             // Compose 세부 화면
             "StateSaving" -> RememberVsSaveableScreen(Modifier.padding(innerPadding))
             "Stability" -> StabilityRecompositionScreen(Modifier.padding(innerPadding))
@@ -202,6 +217,8 @@ fun StudyNavigator() {
             "HiltComparison" -> HiltComparisonScreen(Modifier.padding(innerPadding))
             // Testing 세부 화면
             "TestingOverview" -> TestingStudyScreen(Modifier.padding(innerPadding))
+            // Memory 세부 화면
+            "MemoryLeak" -> MemoryLeakScreen(Modifier.padding(innerPadding))
         }
     }
 }
@@ -274,6 +291,16 @@ fun RootScreen(
             description = "JUnit, MockK, Coroutine Test, Compose UI Test, TDD 실습",
             color = Category.Testing.color,
             onClick = { onCategorySelect("Testing") }
+        )
+
+        // Memory
+        CategoryCard(
+            emoji = Category.Memory.emoji,
+            title = Category.Memory.title,
+            subtitle = Category.Memory.subtitle,
+            description = "메모리 누수 7가지 패턴, LeakCanary, Memory Profiler 사용법",
+            color = Category.Memory.color,
+            onClick = { onCategorySelect("Memory") }
         )
     }
 }
@@ -515,6 +542,40 @@ fun TestingHomeScreen(
         // - Screenshot Testing
         // - Performance Testing
         // - Integration Testing
+    }
+}
+
+// ========================================================================
+// Memory Home Screen - Memory 학습 주제 선택
+// ========================================================================
+
+@Composable
+fun MemoryHomeScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (String) -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            text = "학습하고 싶은 주제를 선택하세요",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        StudyCard(
+            title = MemoryScreen.MemoryLeak.title,
+            subtitle = MemoryScreen.MemoryLeak.subtitle,
+            description = "Static Reference, Inner Class, Handler, Singleton 등 7가지 누수 패턴과 해결책",
+            color = MemoryScreen.MemoryLeak.color,
+            onClick = { onNavigate("MemoryLeak") }
+        )
     }
 }
 
